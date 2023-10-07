@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+    	
+    <version>1.0</version>
+    	
+    <description>Math Modeling MS Assignment</description>
+    	
+    <configs>
+        		
+        <config default="true" name="Configuration1" category="opl">
+            			
+            <ref name="ElectricityMinimization.mod" type="model">
+			</ref>
+            			
+            <ref name="ElectricityMinimization.ops" type="setting">
+			</ref>
+            			
+            <ref name="ElectricityMinimization.dat" type="data">
+			</ref>
+            		
+        </config>
+        	
+    </configs>
+    	
+
+</project>
