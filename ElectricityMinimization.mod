@@ -45,11 +45,11 @@ subject to
 {
     //Fridge is On in peak hours only
     forall(fridge in fridgeIndices)
-    forall(timeSlot in timeSlotIndices)
-    {
-        isThisFridgeOnInThisTimeSlot[fridge]
-                                    [timeSlot] == isFridgeOnInThisTimeSlot[timeSlot];
-    }
+        forall(timeSlot in timeSlotIndices)
+        {
+            isThisFridgeOnInThisTimeSlot[fridge]
+                                        [timeSlot] == isFridgeOnInThisTimeSlot[timeSlot];
+        }
 
     //Oven is On only for 15 mins
     sum(timeSlot in timeSlotIndices) isOvenOnInThisTimeSlot[timeSlot] == 1; 
