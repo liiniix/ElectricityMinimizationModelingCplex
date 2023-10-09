@@ -26,8 +26,8 @@ float costOfFridgePerQuarterHour[1..2][1..2] = ...;
                                                         dexpr float costForFridges = 
                                                             sum(fridge in fridgeIndices,
                                                                 timeSlot in timeSlotIndices) isThisFridgeOnInThisTimeSlot[fridge][timeSlot] * costOfFridgePerQuarterHour[isThisTimeSlotInPeakHours[timeSlot] + 1]
-																																										[isThisFridgeOnInThisTimeSlot[fridge][timeSlot] + 1];
-//Oven Related
+                                                                                                                                                                        [isThisFridgeOnInThisTimeSlot[fridge][timeSlot] + 1];
+// Oven Related
 float costOfOvenPerQuarterHour[1..2][1..2]   = ...;																						 
                                                         dvar boolean
                                                             isOvenOnInThisTimeSlot[timeSlotIndices];
@@ -37,13 +37,30 @@ float costOfOvenPerQuarterHour[1..2][1..2]   = ...;
                                                                 isOvenOnInThisTimeSlot[timeSlot] * costOfOvenPerQuarterHour[isThisTimeSlotInPeakHours[timeSlot] + 1]
                                                                                                                            [isOvenOnInThisTimeSlot[timeSlot] + 1];
 
+// Battery Related
+float costOfChargingBatteryPerQuarterHour[1..2][1..2] = ...;
+float costSavedForDischargingBatteryPerQuarterHour[1..2][1..2] = ...;
+                                                        dvar int batteryState[1..3] = [1, 2, 3];
+                                                        dvar boolean
+                                                                isBatteryChargingInThisTimeSlot[timeSlotIndices];
+                                                        
+                                                        dexpr float costForBattery = 
+                                                            sum(timeSlot in timeSlotIndices)
+                                                                isBatteryChargingInThisTimeSlot[timeSlot] * costOfChargingBatteryPerQuarterHour[isThisTimeSlotInPeakHours[timeSlot] + 1]
+                                                                                                                                               [isBatteryChargingInThisTimeSlot[timeSlot] + 1];
+                                                        dexpr float costSavedForBattery =
+                                                            sum(timeSlot in timeSlotIndices)
+                                                                isBatteryChargingInThisTimeSlot[timeSlot] * costSavedForDischargingBatteryPerQuarterHour[isThisTimeSlotInPeakHours[timeSlot] + 1]
+                                                                                                                                                        [isBatteryChargingInThisTimeSlot[timeSlot] + 1];
 minimize costForFridges +
-         costForOven;
+         costForOven +
+         costForBattery -
+         costSavedForBattery;
 
 
 subject to
 {
-    //Fridge is On in peak hours only
+    // Fridge is On in peak hours only
     forall(fridge in fridgeIndices)
         forall(timeSlot in timeSlotIndices)
         {
@@ -51,6 +68,8 @@ subject to
                                         [timeSlot] == isFridgeOnInThisTimeSlot[timeSlot];
         }
 
-    //Oven is On only for 15 mins
-    sum(timeSlot in timeSlotIndices) isOvenOnInThisTimeSlot[timeSlot] == 1; 
+    // Oven is On only for 15 mins
+    sum(timeSlot in timeSlotIndices) isOvenOnInThisTimeSlot[timeSlot] == 1;
+    
+    
 }
